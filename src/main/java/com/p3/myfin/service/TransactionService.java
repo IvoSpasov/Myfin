@@ -45,14 +45,21 @@ public class TransactionService {
 
     @Transactional
     public Transaction createTransaction(TransactionCreateRequest request) {
+        validateAmount(request.amount()); // business logic level validation
         var transaction = new Transaction();
         mapToEntity(request, transaction);
         transactionRepository.save(transaction);
         return transaction;
     }
 
-    private void mapToEntity(TransactionCreateRequest request, Transaction transactionEntity){
+    private void mapToEntity(TransactionCreateRequest request, Transaction transactionEntity) {
         transactionEntity.setType(request.type());
         transactionEntity.setAmount(request.amount());
+    }
+
+    private void validateAmount(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be a positive and not a zero number.");
+        }
     }
 }

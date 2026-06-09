@@ -3,6 +3,7 @@ package com.p3.myfin.api;
 import com.p3.myfin.data.Transaction;
 import com.p3.myfin.data.TransactionType;
 import com.p3.myfin.service.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -30,7 +31,7 @@ public class TransactionController {
     }
 
     @PostMapping
-    public Transaction createTransaction(@RequestBody TransactionCreateRequest request) {
+    public Transaction createTransaction(@Valid @RequestBody TransactionCreateRequest request) {
         return transactionService.createTransaction(request);
     }
 }
