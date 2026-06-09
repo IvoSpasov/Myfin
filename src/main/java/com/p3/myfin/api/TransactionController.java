@@ -16,10 +16,10 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    //@GetMapping
-    //public Transaction getTransaction() {
-    //    return transactionService.getTransaction(1);
-    //}
+    @GetMapping("{id}")
+    public Transaction getTransaction(@PathVariable long id) {
+        return transactionService.getTransaction(id);
+    }
 
     @PostMapping
     public void createTransaction(@RequestParam TransactionType type, @RequestParam BigDecimal amount) {

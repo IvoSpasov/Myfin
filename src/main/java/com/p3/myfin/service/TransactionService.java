@@ -16,9 +16,11 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
-//    public Transaction getTransaction(long id) {
-//        return transactionRepository.getTransaction(id);
-//    }
+    public Transaction getTransaction(long id) {
+        return transactionRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
+    }
 
     @Transactional
     public void createTransaction(TransactionType type, BigDecimal amount) {
