@@ -30,7 +30,7 @@ public class TransactionController {
     }
 
     @PostMapping
-    public void createTransaction(@RequestParam TransactionType type, @RequestParam BigDecimal amount) {
-        transactionService.createTransaction(type, amount);
+    public Transaction createTransaction(@RequestBody TransactionCreateRequest request) {
+        return transactionService.createTransaction(request);
     }
 }

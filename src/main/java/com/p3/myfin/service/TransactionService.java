@@ -1,5 +1,6 @@
 package com.p3.myfin.service;
 
+import com.p3.myfin.api.TransactionCreateRequest;
 import com.p3.myfin.data.Transaction;
 import com.p3.myfin.data.TransactionRepository;
 import com.p3.myfin.data.TransactionType;
@@ -43,10 +44,15 @@ public class TransactionService {
     }
 
     @Transactional
-    public void createTransaction(TransactionType type, BigDecimal amount) {
+    public Transaction createTransaction(TransactionCreateRequest request) {
         var transaction = new Transaction();
-        transaction.setType(type);
-        transaction.setAmount(amount);
+        mapToEntity(request, transaction);
         transactionRepository.save(transaction);
+        return transaction;
+    }
+
+    private void mapToEntity(TransactionCreateRequest request, Transaction transactionEntity){
+        transactionEntity.setType(request.type());
+        transactionEntity.setAmount(request.amount());
     }
 }
