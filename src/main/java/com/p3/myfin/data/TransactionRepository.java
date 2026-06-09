@@ -4,10 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    //Transaction getTransaction(long id);
-    //void createTransaction(TransactionType type, BigDecimal amount);
-    //void editTransaction(long id, TransactionType type, BigDecimal amount);
+    List<Transaction> findByType(TransactionType type);
+    List<Transaction> findByAmount(BigDecimal amount);
 }
