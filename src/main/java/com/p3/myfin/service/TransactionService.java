@@ -1,6 +1,7 @@
 package com.p3.myfin.service;
 
 import com.p3.myfin.api.TransactionCreateRequest;
+import com.p3.myfin.api.TransactionResponse;
 import com.p3.myfin.data.Transaction;
 import com.p3.myfin.data.TransactionRepository;
 import com.p3.myfin.data.TransactionType;
@@ -20,13 +21,14 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
-    public Transaction getTransaction(long id) {
+    public TransactionResponse getTransaction(long id) {
         return transactionRepository
                 .findById(id)
+                .map(this::mapToResponse)
                 .orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
     }
 
-    public List<Transaction> getTransactions(Optional<TransactionType> type, Optional<BigDecimal> amount) {
+    public List<TransactionResponse> getTransactions(Optional<TransactionType> type, Optional<BigDecimal> amount) {
         List<Transaction> transactions;
         if (type.isPresent() && amount.isPresent()) {
             transactions = transactionRepository.findByType(type.get()).stream()
@@ -40,21 +42,30 @@ public class TransactionService {
             transactions = transactionRepository.findAll();
         }
 
-        return transactions;
+        return transactions.stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
     @Transactional
-    public Transaction createTransaction(TransactionCreateRequest request) {
+    public TransactionResponse createTransaction(TransactionCreateRequest request) {
         validateAmount(request.amount()); // business logic level validation
         var transaction = new Transaction();
         mapToEntity(request, transaction);
-        transactionRepository.save(transaction);
-        return transaction;
+        var savedTransaction = transactionRepository.save(transaction);
+        return mapToResponse(savedTransaction);
     }
 
     private void mapToEntity(TransactionCreateRequest request, Transaction transactionEntity) {
         transactionEntity.setType(request.type());
         transactionEntity.setAmount(request.amount());
+    }
+
+    private TransactionResponse mapToResponse(Transaction entity){
+        return new TransactionResponse(
+                entity.getId(),
+                entity.getType(),
+                entity.getAmount());
     }
 
     private void validateAmount(BigDecimal amount) {

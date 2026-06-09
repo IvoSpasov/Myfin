@@ -4,9 +4,12 @@ import com.p3.myfin.data.Transaction;
 import com.p3.myfin.data.TransactionType;
 import com.p3.myfin.service.TransactionService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,18 +23,23 @@ public class TransactionController {
     }
 
     @GetMapping("{id}") // with path variables
-    public Transaction getTransaction(@PathVariable long id) {
+    public TransactionResponse getTransaction(@PathVariable long id) {
         return transactionService.getTransaction(id);
     }
 
     @GetMapping // with query parameters
-    public List<Transaction> getTransactions(@RequestParam Optional<TransactionType> type,
+    public List<TransactionResponse> getTransactions(@RequestParam Optional<TransactionType> type,
                                              @RequestParam Optional<BigDecimal> amount) {
         return transactionService.getTransactions(type, amount);
     }
 
     @PostMapping
-    public Transaction createTransaction(@Valid @RequestBody TransactionCreateRequest request) {
-        return transactionService.createTransaction(request);
+    public ResponseEntity<TransactionResponse> createTransaction(@Valid @RequestBody TransactionCreateRequest request) {
+        var createdTransaction = transactionService.createTransaction(request);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("{/{id}}")
+                .buildAndExpand(createdTransaction.id())
+                .toUri();
+        return ResponseEntity.created(location).body(createdTransaction);
     }
 }
