@@ -5,6 +5,8 @@ import com.p3.myfin.api.TransactionResponse;
 import com.p3.myfin.data.Transaction;
 import com.p3.myfin.data.TransactionRepository;
 import com.p3.myfin.data.TransactionType;
+import com.p3.myfin.error.BadRequestException;
+import com.p3.myfin.error.NotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,7 @@ public class TransactionService {
         return transactionRepository
                 .findById(id)
                 .map(this::mapToResponse)
-                .orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
+                .orElseThrow(() -> new NotFoundException("Transaction not found"));
     }
 
     public List<TransactionResponse> getTransactions(Optional<TransactionType> type, Optional<BigDecimal> amount) {
@@ -70,7 +72,7 @@ public class TransactionService {
 
     private void validateAmount(BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Amount must be a positive and not a zero number.");
+            throw new BadRequestException("Amount must be a positive and not a zero number.");
         }
     }
 }

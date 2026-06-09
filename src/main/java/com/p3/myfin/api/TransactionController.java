@@ -29,7 +29,7 @@ public class TransactionController {
 
     @GetMapping // with query parameters
     public List<TransactionResponse> getTransactions(@RequestParam Optional<TransactionType> type,
-                                             @RequestParam Optional<BigDecimal> amount) {
+                                                     @RequestParam Optional<BigDecimal> amount) {
         return transactionService.getTransactions(type, amount);
     }
 
