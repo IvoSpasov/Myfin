@@ -14,11 +14,21 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+// This annotation tells Spring to create an instance of this class and manage its lifecycle when we start the application.
+// It also tells Spring that this class is a component. Other components are @Repository, @Controller, @RestController.
+// You can also annotate with @Component. Each of these tell Spring to make a class and keep it in the application context.
+// Spring Bean is an instance of a class managed by the Spring container.
+// Spring container - a runtime environment that stores, creates, injects and manages Spring beans.
+// Dependency Injection can only happen in Beans.
+// @RestController - tells Spring this class handles HTTP requests (bean)
+// @Service - indicates a service layer component (bean)
+// @Repository - marks a data access component (bean)
+// @Component - used when none of the standard ones apply (bean)
 @Service
-// this annotation tells Spring to create an instance of this class and manage its lifecycle when we start the application
 public class TransactionService {
     private final TransactionRepository transactionRepository;
 
+    // when there's only one constructor, we don't need the autowired annotation
     public TransactionService(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }

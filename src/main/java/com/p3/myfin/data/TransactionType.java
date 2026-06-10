@@ -1,6 +1,6 @@
 package com.p3.myfin.data;
 
-public enum TransactionType{
+public enum TransactionType {
     Income,
     Expense
 }
