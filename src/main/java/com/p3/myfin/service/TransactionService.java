@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +39,7 @@ public class TransactionService {
         return transactionRepository
                 .findById(id)
                 .map(this::mapToResponse)
-                .orElseThrow(() -> new NotFoundException("Transaction not found"));
+                .orElseThrow(() -> new NotFoundException("Transaction not found with id: " + id));
     }
 
     public List<TransactionResponse> getTransactions(Optional<TransactionType> type, Optional<BigDecimal> amount) {
@@ -74,11 +73,18 @@ public class TransactionService {
     public TransactionResponse updateTransaction(long id, TransactionUpdateRequest request) {
         var transaction = transactionRepository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException("Transaction not found"));
+                .orElseThrow(() -> new NotFoundException("Transaction not found with id: " + id));
 
         mapToEntity(request, transaction);
         var savedTransaction = transactionRepository.save(transaction);
         return mapToResponse(savedTransaction);
+    }
+
+    public void deleteTransaction(long id) {
+        if (!transactionRepository.existsById(id)){
+            throw new NotFoundException("Transaction not found with id: " + id);
+        }
+        transactionRepository.deleteById(id);
     }
 
     private void mapToEntity(TransactionCreateRequest request, Transaction transactionEntity) {

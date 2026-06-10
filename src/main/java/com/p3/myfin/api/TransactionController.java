@@ -1,6 +1,5 @@
 package com.p3.myfin.api;
 
-import com.p3.myfin.data.Transaction;
 import com.p3.myfin.data.TransactionType;
 import com.p3.myfin.service.TransactionService;
 import jakarta.validation.Valid;
@@ -48,5 +47,11 @@ public class TransactionController {
                                                                  @Valid @RequestBody TransactionUpdateRequest request) {
         var updatedTransaction = transactionService.updateTransaction(id, request);
         return ResponseEntity.ok(updatedTransaction);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTransaction(@PathVariable long id) {
+        transactionService.deleteTransaction(id);
+        return ResponseEntity.noContent().build();
     }
 }
