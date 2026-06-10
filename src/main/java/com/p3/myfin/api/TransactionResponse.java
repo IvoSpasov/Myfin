@@ -9,6 +9,6 @@ public record TransactionResponse(
         long id,
         TransactionType type,
         BigDecimal amount,
-        Instant dateCreated
-) {
+        Instant dateCreated,
+        Instant dateUpdated) {
 }

@@ -22,12 +22,17 @@ public class Transaction {
     @CreationTimestamp
     private Instant dateCreated;
 
+    @Column(name = "date_updated", nullable = true, updatable = true, columnDefinition = "TIMESTAMPTZ")
+    private Instant dateUpdated;
+
     public long getId() { return id; }
     public TransactionType getType() { return type; }
     public BigDecimal getAmount() { return amount; }
     public Instant getDateCreated() { return dateCreated; }
+    public Instant getDateUpdated() { return dateUpdated; }
 
     public void setType(TransactionType type) { this.type = type; }
     public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public void setDateUpdated(Instant dateUpdated) { this.dateUpdated = dateUpdated; }
 }
 

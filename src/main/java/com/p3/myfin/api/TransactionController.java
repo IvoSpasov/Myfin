@@ -42,4 +42,11 @@ public class TransactionController {
                 .toUri();
         return ResponseEntity.created(location).body(createdTransaction);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TransactionResponse> updateTransaction(@PathVariable long id,
+                                                                 @Valid @RequestBody TransactionUpdateRequest request) {
+        var updatedTransaction = transactionService.updateTransaction(id, request);
+        return ResponseEntity.ok(updatedTransaction);
+    }
 }

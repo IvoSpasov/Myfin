@@ -2,6 +2,7 @@ package com.p3.myfin.service;
 
 import com.p3.myfin.api.TransactionCreateRequest;
 import com.p3.myfin.api.TransactionResponse;
+import com.p3.myfin.api.TransactionUpdateRequest;
 import com.p3.myfin.data.Transaction;
 import com.p3.myfin.data.TransactionRepository;
 import com.p3.myfin.data.TransactionType;
@@ -11,6 +12,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,9 +71,25 @@ public class TransactionService {
         return mapToResponse(savedTransaction);
     }
 
+    public TransactionResponse updateTransaction(long id, TransactionUpdateRequest request) {
+        var transaction = transactionRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Transaction not found"));
+
+        mapToEntity(request, transaction);
+        var savedTransaction = transactionRepository.save(transaction);
+        return mapToResponse(savedTransaction);
+    }
+
     private void mapToEntity(TransactionCreateRequest request, Transaction transactionEntity) {
         transactionEntity.setType(request.type());
         transactionEntity.setAmount(request.amount());
+    }
+
+    private void mapToEntity(TransactionUpdateRequest request, Transaction transactionEntity) {
+        transactionEntity.setType(request.type());
+        transactionEntity.setAmount(request.amount());
+        transactionEntity.setDateUpdated(Instant.now());
     }
 
     private TransactionResponse mapToResponse(Transaction entity) {
@@ -78,7 +97,8 @@ public class TransactionService {
                 entity.getId(),
                 entity.getType(),
                 entity.getAmount(),
-                entity.getDateCreated());
+                entity.getDateCreated(),
+                entity.getDateUpdated());
     }
 
     private void validateAmount(BigDecimal amount) {
