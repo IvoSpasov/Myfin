@@ -67,7 +67,8 @@ public class TransactionService {
         return new TransactionResponse(
                 entity.getId(),
                 entity.getType(),
-                entity.getAmount());
+                entity.getAmount(),
+                entity.getDateCreated());
     }
 
     private void validateAmount(BigDecimal amount) {
