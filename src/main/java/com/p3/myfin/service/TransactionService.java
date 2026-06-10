@@ -63,7 +63,7 @@ public class TransactionService {
         transactionEntity.setAmount(request.amount());
     }
 
-    private TransactionResponse mapToResponse(Transaction entity){
+    private TransactionResponse mapToResponse(Transaction entity) {
         return new TransactionResponse(
                 entity.getId(),
                 entity.getType(),
